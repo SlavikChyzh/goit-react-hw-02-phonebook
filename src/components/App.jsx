@@ -2,7 +2,8 @@ import { Component } from 'react';
 import ContactForm from './ContactForm/ContactForm';
 import { nanoid } from 'nanoid';
 import { ContactList } from './ContactList/ContactList';
-import Filter from './Filter/Filter';
+import { Filter } from './Filter/Filter';
+import { Conteiner } from './Element/Element.styled';
 
 export default class App extends Component {
   state = {
@@ -31,22 +32,30 @@ export default class App extends Component {
       };
     });
   };
+  onChange = ({ target }) => {
+    this.setState({ filter: target.value });
+  };
+  filterContacts = (arr, filter) => {
+    return arr.filter(ell =>
+      ell.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
 
   render() {
     return (
-      <>
+      <Conteiner>
         <h3>PhoneBook</h3>
         <ContactForm
           contacts={this.state.contacts}
           addContact={this.addContact}
         ></ContactForm>
-        <Filter></Filter>
+        <Filter onChange={this.onChange} filter={this.state.filter}></Filter>
         <h3>Contacts</h3>
         <ContactList
-          contacts={this.state.contacts}
+          contacts={this.filterContacts(this.state.contacts, this.state.filter)}
           deleteContact={this.deleteContact}
         ></ContactList>
-      </>
+      </Conteiner>
     );
   }
 }

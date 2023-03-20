@@ -1,4 +1,7 @@
 import { Component } from 'react';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { InputData } from './ContactForm.styled';
+import { Button } from 'components/Element/Element.styled';
 
 export class ContactForm extends Component {
   state = {
@@ -12,19 +15,18 @@ export class ContactForm extends Component {
     e.preventDefault();
     const { addContact, contacts } = this.props;
     const arrOfName = contacts.map(({ name }) => name);
-    {
-      arrOfName.includes(this.state.name)
-        ? console.log('444')
-        : addContact({ ...this.state });
-      this.setState({ name: '', number: '' });
-    }
+    arrOfName.includes(this.state.name)
+      ? Report.failure('Failure', 'Name is already in contacts.', 'Okay')
+      : addContact({ ...this.state });
+    this.setState({ name: '', number: '' });
   };
+
   render() {
     const { name, number } = this.state;
     return (
       <>
         <form onSubmit={this.submitHandler}>
-          <input
+          <InputData
             type="text"
             name="name"
             value={name}
@@ -33,7 +35,7 @@ export class ContactForm extends Component {
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
           />
-          <input
+          <InputData
             type="tel"
             name="number"
             value={number}
@@ -42,7 +44,7 @@ export class ContactForm extends Component {
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
-          <button>Add contact</button>
+          <Button>Add contact</Button>
         </form>
       </>
     );
